@@ -4,11 +4,12 @@
 
 ### 项目启动
 
-- [ ] 确定项目定位：Self-hosted Personal Knowledge Platform
-- [ ] 参考项目：Khoj、Open WebUI、Dify
-- [ ] 确认方向：不走 SaaS，走开源自部署路线
-- [ ] 业务场景对齐：企业知识问答 / 设备故障诊断 Agent
-- [ ] 技术栈确认：FastAPI + LangChain + LangGraph + Qdrant + PostgreSQL + Redis
+- [x] 确定项目定位：Self-hosted Personal Knowledge Platform
+- [x] 参考项目：Khoj、Open WebUI、Dify
+- [x] 确认方向：不走 SaaS，走开源自部署路线
+- [x] 业务场景对齐：企业知识问答 / 设备故障诊断 Agent
+- [x] 技术栈确认：FastAPI + LangChain + LangGraph + Qdrant + PostgreSQL + Redis
+- [x] Git 初始化 + GitHub 仓库连接
 
 ---
 
@@ -20,4 +21,7 @@
 
 ## 开发记录
 
-（待补充）
+### 2026-06-16
+
+- [x] 目录结构和核心接口定义评审
+- [x] GitHub: https://github.com/Roxie-Deng/mindstream
