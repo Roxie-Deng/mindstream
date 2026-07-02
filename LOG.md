@@ -25,3 +25,21 @@
 
 - [x] 目录结构和核心接口定义评审
 - [x] GitHub: https://github.com/Roxie-Deng/mindstream
+
+### 2026-07-02
+
+- [x] FastAPI 项目骨架初始化
+- [x] 使用 `uv + pyproject.toml`（不用 requirements.txt）
+- [x] `/health` 和 `/api/v1/health` 接口验证通过
+
+**启动命令：**
+```bash
+cd mindstream
+uv run uvicorn app.main:app --reload --port 8000
+```
+
+**验证：**
+```bash
+curl --noproxy '*' http://localhost:8000/health
+# -> {"status":"healthy"}
+```

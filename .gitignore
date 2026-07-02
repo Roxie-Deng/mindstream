@@ -34,3 +34,4 @@ npm-debug.log*
 # Local env
 .env.local
 .env.*.local
+uv.lock
