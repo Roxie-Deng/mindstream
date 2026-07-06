@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from pathlib import Path
+from typing import List
 
 from app.services.document_parser import parse_document
+from app.services.chunk_service import chunk_documents
 
 router = APIRouter()
 
@@ -14,16 +16,8 @@ class SyncRequest(BaseModel):
 
 
 class SyncResponse(BaseModel):
-    files: list[str]
-
-
-class ParseRequest(BaseModel):
-    file_path: str
-
-
-class ParseResponse(BaseModel):
-    content: str
-    metadata: dict
+    files_found: int
+    chunks_created: int
 
 
 @router.post("/sync", response_model=SyncResponse)
@@ -37,23 +31,19 @@ def sync_documents(request: SyncRequest):
         raise HTTPException(status_code=400, detail=f"Not a directory: {request.directory}")
 
     files = [
-        str(f.relative_to(dir_path))
+        f
         for f in dir_path.rglob("*")
         if f.is_file() and f.suffix.lower() in SUPPORTED_EXTENSIONS
     ]
 
-    return SyncResponse(files=files)
+    all_documents = []
+    for f in files:
+        docs = parse_document(str(f))
+        all_documents.extend(docs)
 
+    chunks = chunk_documents(all_documents)
 
-@router.post("/parse", response_model=ParseResponse)
-def parse_doc(request: ParseRequest):
-    path = Path(request.file_path)
-
-    if not path.exists():
-        raise HTTPException(status_code=404, detail=f"File not found: {request.file_path}")
-
-    if path.suffix.lower() not in SUPPORTED_EXTENSIONS:
-        raise HTTPException(status_code=400, detail=f"Unsupported file type: {path.suffix}")
-
-    doc = parse_document(str(path))
-    return ParseResponse(content=doc.content, metadata=doc.metadata)
+    return SyncResponse(
+        files_found=len(files),
+        chunks_created=len(chunks),
+    )

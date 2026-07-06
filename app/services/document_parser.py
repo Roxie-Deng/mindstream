@@ -1,14 +1,10 @@
 from pathlib import Path
+from typing import List
 from pypdf import PdfReader
-from pydantic import BaseModel
+from langchain_core.documents import Document as LCDocument
 
 
-class Document(BaseModel):
-    content: str
-    metadata: dict
-
-
-def parse_document(file_path: str) -> Document:
+def parse_document(file_path: str) -> List[LCDocument]:
     path = Path(file_path)
 
     suffix = path.suffix.lower()
@@ -21,13 +17,14 @@ def parse_document(file_path: str) -> Document:
     else:
         raise ValueError(f"Unsupported file type: {suffix}")
 
-    return Document(
-        content=content,
+    return [LCDocument(
+        page_content=content,
         metadata={
             "file_name": path.name,
             "file_type": suffix,
+            "source": str(path.absolute()),
         },
-    )
+    )]
 
 
 def _parse_markdown(path: Path) -> str:
@@ -43,4 +40,4 @@ def _parse_pdf(path: Path) -> str:
     texts = []
     for page in reader.pages:
         texts.append(page.extract_text())
-    return "\n".join(texts)
+    return "\n\n".join(texts)
